@@ -18,7 +18,7 @@ Easy to Setup and Easy to Use:
 
 
 <b>Optimize GLB Files</b>
-- RUN: node optimize.js
+- RUN: node optimize.mjs
 - Your files located in "_output" directory will be optimized to "_optimized" folder
 - View the log and wait till finished
 - You can tweak optimize.mjs code (ie. const imageFormat = 'webp'; const imageSize = 512;)
