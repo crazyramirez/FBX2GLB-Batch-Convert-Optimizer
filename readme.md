@@ -7,7 +7,7 @@ NodeJS APP to Batch Convert fbx files to glb and Fast Optimization (Draco -- Tex
 <br>
 
 <b><span>&#10003;</span>
-Setup</b>
+Setup NodeJS</b>
 
 - Install NodeJS from https://nodejs.org/en
 - Download or Clone this Repository
