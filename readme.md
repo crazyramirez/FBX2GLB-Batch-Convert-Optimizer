@@ -17,7 +17,6 @@ Easy to Setup and Easy to Use:
 
 <b>Convert FBX to GLB</b>
 - RUN: <b>node convert.js</b>
-- View the log and wait till finished
 - Your Files will be converted in "_output" directory using the same structure
 - View the log and wait till finished
 
@@ -26,8 +25,8 @@ Easy to Setup and Easy to Use:
 <b>Optimize GLB Files</b>
 - RUN: <b>node optimize.mjs</b>
 - Your files located in "_output" directory will be optimized to "_optimized" folder
-- View the log and wait till finished
 - You can tweak optimize.mjs code (ie. const imageFormat = 'webp'; const imageSize = 512;)
+- View the log and wait till finished
 
 <br>
 
