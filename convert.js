@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const convert = require('fbx2gltf');
 
+
 function convertFBXFiles(inputDir, outputDir) {
   fs.readdirSync(inputDir).forEach(file => {
     const filePath = path.join(inputDir, file);
