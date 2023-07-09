@@ -1,2 +1,4 @@
 _input/**
 _output/**
+_optimized/**
+node_modules/**

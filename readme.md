@@ -1,4 +1,4 @@
-NodeJS APP to Batch Convert fbx files to glb.
+NodeJS APP to Batch Convert fbx files to glb and Fast Optimization.
 Easy to Setup and Easy to Use:
 
 - Install NodeJS from https://nodejs.org/en
@@ -6,13 +6,26 @@ Easy to Setup and Easy to Use:
 - Open a Terminal (Usign for example VSCode) 
 - RUN: npm install (To Install NPM Libraries)
 
+<b>Setup Your FBX Files</b>
 - Copy your FBX Files in "_input" directory, also you can use subdirectories
 
-- RUN: node index.js (To Run the Batch Converter)
+
+<b>Convert FBX to GLB</b>
+- RUN: node convert.js
+- View the log and wait till finished
+- Your Files will be converted in "_output" directory using the same structure
 - View the log and wait till finished
 
-- Your Files will be converted in "_output" directory using the same structure
+
+<b>Optimize GLB Files</b>
+- RUN: node optimize.js
+- Your files located in "_output" directory will be optimized to "_optimized" folder
+- View the log and wait till finished
+- You can tweak optimize.mjs code (ie. const imageFormat = 'webp'; const imageSize = 512;)
 
 
 This APP uses FBX2GLTF Library:
 https://www.npmjs.com/package/fbx2gltf
+
+and GLTF-Transform:
+https://gltf-transform.dev/

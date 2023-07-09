@@ -1,7 +1,14 @@
 {
   "dependencies": {
+    "@gltf-transform/core": "^3.4.5",
+    "@gltf-transform/extensions": "^3.4.5",
+    "@gltf-transform/functions": "^3.4.5",
+    "draco3dgltf": "^1.5.6",
     "fbx2gltf": "^0.9.7-p1",
     "fs": "^0.0.1-security",
-    "path": "^0.12.7"
+    "fs-extra": "^11.1.1",
+    "gltf-pipeline": "^4.1.0",
+    "path": "^0.12.7",
+    "sharp": "^0.32.1"
   }
 }
