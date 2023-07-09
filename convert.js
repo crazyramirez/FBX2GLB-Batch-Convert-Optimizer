@@ -1,4 +1,3 @@
-// Files Iteration on _input Folder Convert
 const fs = require('fs');
 const path = require('path');
 const convert = require('fbx2gltf');
@@ -11,12 +10,14 @@ function convertFBXFiles(inputDir, outputDir) {
     if (stats.isFile() && path.extname(file) === '.fbx') {
       const outputFile = path.join(outputDir, file.replace('.fbx', '.glb'));
 
+      console.log(`Converting file: ${filePath}`);
+
       convert(filePath, outputFile, ['--khr-materials-unlit']).then(
         destPath => {
-          console.log(`File Converted: ${destPath}`);
+          console.log(`File converted: ${destPath}`);
         },
         error => {
-          console.error(`Error Converting File: ${filePath}`);
+          console.error(`Error converting file: ${filePath}`);
           console.error(error);
         }
       );
