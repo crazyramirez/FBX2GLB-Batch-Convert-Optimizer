@@ -7,7 +7,7 @@ Easy to Setup and Easy to Use:
 - Install NodeJS from https://nodejs.org/en
 - Download or Clone this Repository
 - Open a Terminal (Usign for example VSCode) 
-- RUN: npm install (To Install NPM Libraries)
+- RUN: <b>npm install</b> (To Install NPM Libraries)
 <br>
 
 <b>Setup Your FBX Files</b>
@@ -16,7 +16,7 @@ Easy to Setup and Easy to Use:
 <br>
 
 <b>Convert FBX to GLB</b>
-- RUN: node convert.js
+- RUN: <b>node convert.js</b>
 - View the log and wait till finished
 - Your Files will be converted in "_output" directory using the same structure
 - View the log and wait till finished
@@ -24,7 +24,7 @@ Easy to Setup and Easy to Use:
 <br>
 
 <b>Optimize GLB Files</b>
-- RUN: node optimize.mjs
+- RUN: <b>node optimize.mjs</b>
 - Your files located in "_output" directory will be optimized to "_optimized" folder
 - View the log and wait till finished
 - You can tweak optimize.mjs code (ie. const imageFormat = 'webp'; const imageSize = 512;)
