@@ -1,4 +1,4 @@
-NodeJS APP to Batch Convert fbx files to glb and Fast Optimization.
+NodeJS APP to Batch Convert fbx files to glb and Fast Optimization (Draco -- Texture Compression).
 <br>
 <br>
 
