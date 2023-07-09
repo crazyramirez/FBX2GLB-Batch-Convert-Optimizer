@@ -1,4 +1,5 @@
-_input/**
-_output/**
-_optimized/**
+_input/*
+_output/*
+_optimized/*
+
 node_modules/**
