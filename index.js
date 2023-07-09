@@ -24,12 +24,12 @@ function convertFBXFiles(inputDir, outputDir) {
     if (stats.isFile() && path.extname(file) === '.fbx') {
       const outputFile = path.join(outputDir, file.replace('.fbx', '.glb'));
 
-      convert(filePath, outputFile, ['--khr-materials-unlit']).then(
+      convert(filePath, outputFile).then(
         destPath => {
-          console.log(`Archivo convertido: ${destPath}`);
+          console.log(`File Converted: ${destPath}`);
         },
         error => {
-          console.error(`Error al convertir el archivo: ${filePath}`);
+          console.error(`Error Converting File: ${filePath}`);
           console.error(error);
         }
       );
@@ -42,4 +42,5 @@ function convertFBXFiles(inputDir, outputDir) {
   });
 }
 
+// Convert Files Function
 convertFBXFiles('_input', '_output');
