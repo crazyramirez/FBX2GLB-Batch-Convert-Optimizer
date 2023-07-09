@@ -14,19 +14,22 @@ Easy to Setup and Easy to Use:
 - RUN: <b>npm install</b> (To Install NPM Libraries)
 <br>
 
-<b>Setup Your FBX Files</b>
+<b><span>&#10003;</span>
+Setup Your FBX Files</b>
 - Copy your FBX Files in "_input" directory, also you can use subdirectories
 
 <br>
 
-<b>Convert FBX to GLB</b>
+<b><span>&#10003;</span>
+Convert FBX to GLB</b>
 - RUN: <b>node convert.js</b>
 - Your Files will be converted in "_output" directory using the same structure
 - View the log and wait till finished
 
 <br>
 
-<b>Optimize GLB Files</b>
+<b><span>&#10003;</span>
+Optimize GLB Files</b>
 - RUN: <b>node optimize.mjs</b>
 - Your files located in "_output" directory will be optimized to "_optimized" folder
 - You can tweak optimize.mjs code to adapt it to your needs (ie. const imageFormat = 'webp'; const imageSize = 512;)
