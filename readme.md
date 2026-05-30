@@ -1,4 +1,4 @@
-<a href="https://www.viseni.com" target="_blank"><img src="https://www.viseni.com/viseni_logo_2.png" style="width: 200px; margin-bottom: 50px"></a>
+<a href="https://www.viseni.com" target="_blank"><img src="https://www.viseni.com/_demos_/viseni-logo-white.webp" style="width: 200px; margin-bottom: 50px"></a>
 <br>
 <br>
 
