@@ -1,4 +1,4 @@
-<a href="https://www.viseni.com" target="_blank"><img src="https://www.viseni.com/_demos_/viseni-logo-white.webp" style="width: 200px; margin-bottom: 50px"></a>
+<a href="https://www.viseni.com" target="_blank"><img src="https://www.viseni.com/viseni_logo_2.png" style="width: 200px; margin-bottom: 50px"></a>
 <br>
 <br>
 
@@ -35,6 +35,25 @@ Optimize GLB Files</b>
 - Your files located in "_output" directory will be optimized to "_optimized" folder
 - You can tweak optimize.mjs code to adapt it to your needs (ie. const imageFormat = 'webp'; const imageSize = 512;)
 - View the log and wait till finished
+
+<br>
+
+<b><span>&#10003;</span>
+Merge GLB Animations</b>
+- Combines animations from a source animation GLB file into a target character GLB file.
+- Retargets rotation keyframes using world-space change-of-basis (Mixamo ↔ UE/Unity compatibility).
+- Automatically maps bone names via normalization rules and custom dictionaries.
+- Discards scale channels and non-root translation channels to avoid limb stretching.
+- Supports posture adjustments (arm and leg spreads, custom per-bone offsets) directly in the configuration section of the script.
+- Cleans up and prunes redundant animation meshes/skins, compresses the output using Draco + resampling, and generates a text file listing all merged animations.
+- RUN: <b>node merge_animations.mjs --character <character_path> --animations <animations_path> --output <output_path></b>
+  - Command line flags:
+    - `-c` or `--character`: Target character GLB path (default: `_input/character.glb`)
+    - `-a` or `--animations`: Source animation GLB path (default: `_input/animations.glb`)
+    - `-o` or `--output`: Output GLB path (default: `_output/character_combined.glb`)
+  - Output files:
+    - Combined GLB file: `_output/character_combined.glb`
+    - Animation list text file: `_output/character_combined_animations.txt`
 
 <br>
 
