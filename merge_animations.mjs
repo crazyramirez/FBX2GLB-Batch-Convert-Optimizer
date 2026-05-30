@@ -32,7 +32,7 @@ const IGNORE_NON_ROOT_TRANSLATION = true;
 // ── EASY POSTURE ADJUSTMENTS ───────────────────────────────────────────────
 // Adjust these simple variables to spread/adjust limbs without manually editing POSE_OFFSETS.
 const ARM_SPREAD_ANGLE = -5;  // Positive value spreads arms away from the body (degrees)
-const LEG_SPREAD_ANGLE = 0;   // Positive value spreads legs outward (degrees)
+const LEG_SPREAD_ANGLE = 5;   // Positive value spreads legs outward (degrees)
 
 // Per-bone rotation offsets applied AFTER retargeting (in degrees: [pitch, yaw, roll]).
 // Use this for custom per-bone tweaks. Values are added on top of ARM_SPREAD_ANGLE / LEG_SPREAD_ANGLE.
@@ -150,17 +150,6 @@ function eulerToQuat(pitch, yaw, roll) {
     cp * cy * cr - sp * sy * sr,
   ];
 }
-function rotateVec3([x, y, z], [qx, qy, qz, qw]) {
-  const ix = qw * x + qy * z - qz * y;
-  const iy = qw * y + qz * x - qx * z;
-  const iz = qw * z + qx * y - qy * x;
-  const iw = -qx * x - qy * y - qz * z;
-  return [
-    ix * qw + iw * -qx + iy * -qz - iz * -qy,
-    iy * qw + iw * -qy + iz * -qx - ix * -qz,
-    iz * qw + iw * -qz + ix * -qy - iy * -qx,
-  ];
-}
 
 /** Build child→parent map using forward references (safe in gltf-transform). */
 function buildParentMap(doc) {
@@ -171,6 +160,18 @@ function buildParentMap(doc) {
     }
   }
   return map;
+}
+
+function rotateVec3([x, y, z], [qx, qy, qz, qw]) {
+  const ix = qw * x + qy * z - qz * y;
+  const iy = qw * y + qz * x - qx * z;
+  const iz = qw * z + qx * y - qy * x;
+  const iw = -qx * x - qy * y - qz * z;
+  return [
+    ix * qw + iw * -qx + iy * -qz - iz * -qy,
+    iy * qw + iw * -qy + iz * -qx - ix * -qz,
+    iz * qw + iw * -qz + ix * -qy - iy * -qx,
+  ];
 }
 
 /** Compute world-space quaternion rotation for every node. */
@@ -275,11 +276,17 @@ async function main() {
   // Index anim rest rotations by lowercase name
   const animRestByName = new Map();
   const animWorldByName = new Map();
+  const animParentNameMap = new Map(); // child-name → parent-name (for post-merge lookup)
   for (const node of animDoc.getRoot().listNodes()) {
     const name = node.getName();
     if (name) {
       animRestByName.set(name.toLowerCase(), node.getRotation() || [0, 0, 0, 1]);
       animWorldByName.set(name.toLowerCase(), animWorldRots.get(node) || [0, 0, 0, 1]);
+    }
+    for (const child of node.listChildren()) {
+      const cn = child.getName()?.toLowerCase();
+      const pn = node.getName()?.toLowerCase();
+      if (cn && pn) animParentNameMap.set(cn, pn);
     }
   }
 
@@ -334,6 +341,7 @@ async function main() {
   if (SKELETON_SOURCE === 'character') {
     console.log('Retargeting animation channels to character skeleton...');
     let bound = 0, disposed = 0, unmatched = 0;
+    const charParentMap = buildParentMap(charDoc); // built once after merge
 
     for (const anim of importedAnims) {
       console.log(`  "${anim.getName() || '?'}"...`);
@@ -350,7 +358,7 @@ async function main() {
 
         const tgtName = target.getName().toLowerCase();
         const srcName = src.getName().toLowerCase();
-        const isRoot = tgtName.includes('Hips') || tgtName.includes('Pelvis') || tgtName === '__root__';
+        const isRoot = tgtName.includes('hips') || tgtName.includes('pelvis') || tgtName === '__root__';
 
         // Discard non-root translation
         if (path === 'translation' && !isRoot && IGNORE_NON_ROOT_TRANSLATION) {
@@ -415,31 +423,33 @@ async function main() {
           }
         }
 
-        // ── Retarget root translation via parent change-of-basis ──
+        // ── Retarget root translation ──────────────────────────────────────
+        // animations.glb has root node Rx(-90°) — bone translations are in Z-up space.
+        // character.glb has identity root — bones are in Y-up space.
+        // Cp converts Z-up→Y-up. We rotate both keyframe AND animRest by Cp before
+        // computing delta, so the delta is in world space and applies correctly.
         if (path === 'translation' && isRoot) {
-          const charParentMap = buildParentMap(charDoc);
-          const animParentMap = buildParentMap(animDoc);
-          // We need parent world rotations — use the pre-merge data
-          const tgtParent = charParentMap.get(target);
-          const srcParent = animParentMap.get(src);
-          const WcharP = tgtParent ? (charWorldByName.get(tgtParent.getName()?.toLowerCase()) || [0, 0, 0, 1]) : [0, 0, 0, 1];
-          const WanimP = srcParent ? (animWorldByName.get(srcParent.getName()?.toLowerCase()) || [0, 0, 0, 1]) : [0, 0, 0, 1];
+          const srcParentName = animParentNameMap.get(srcName);
+          const WanimP = srcParentName ? (animWorldByName.get(srcParentName) || [0, 0, 0, 1]) : [0, 0, 0, 1];
+          const charParent = charParentMap.get(target);
+          const WcharP = charParent ? (charWorldByName.get(charParent.getName()?.toLowerCase()) || [0, 0, 0, 1]) : [0, 0, 0, 1];
           const Cp = qMul(qInvert(WcharP), WanimP);
 
-          const sampler = ch.getSampler();
-          if (sampler) {
-            const output = sampler.getOutput();
-            if (output) {
-              const arr = output.getArray();
-              if (arr) {
-                const out = new Float32Array(arr.length);
-                for (let j = 0; j < arr.length; j += 3) {
-                  const v = rotateVec3([arr[j], arr[j + 1], arr[j + 2]], Cp);
-                  out[j] = v[0]; out[j + 1] = v[1]; out[j + 2] = v[2];
-                }
-                output.setArray(out);
-              }
+          const animRestLocal = src.getTranslation() || [0, 0, 0];
+          const charRest = target.getTranslation() || [0, 0, 0];
+          const animRestWorld = rotateVec3(animRestLocal, Cp);
+
+          const output = ch.getSampler()?.getOutput();
+          const arr = output?.getArray();
+          if (arr) {
+            const out = new Float32Array(arr.length);
+            for (let j = 0; j < arr.length; j += 3) {
+              const kw = rotateVec3([arr[j], arr[j + 1], arr[j + 2]], Cp);
+              out[j]     = charRest[0] + kw[0] - animRestWorld[0];
+              out[j + 1] = charRest[1] + kw[1] - animRestWorld[1];
+              out[j + 2] = charRest[2] + kw[2] - animRestWorld[2];
             }
+            output.setArray(out);
           }
         }
 
